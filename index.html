@@ -8,14 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .sidebar {
-            transition: all 0.3s;
+            transition: all 0.3s ease-in-out;
         }
         .sidebar.collapsed {
             width: 70px;
         }
-        .sidebar.collapsed .sidebar-text {
-            display: none;
-        }
+        .sidebar.collapsed .sidebar-text,
         .sidebar.collapsed .logo-text {
             display: none;
         }
@@ -23,13 +21,13 @@
             justify-content: center;
         }
         .content {
-            transition: margin-left 0.3s;
+            transition: margin-left 0.3s ease-in-out;
         }
         .content.expanded {
             margin-left: 70px;
         }
         .calendar-day {
-            transition: all 0.2s;
+            transition: all 0.2s ease-in-out;
         }
         .calendar-day:hover {
             transform: scale(1.05);
@@ -40,7 +38,7 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         .user-avatar {
-            transition: all 0.3s;
+            transition: all 0.3s ease-in-out;
         }
         .user-avatar:hover {
             transform: scale(1.1);
@@ -52,73 +50,116 @@
         .fade-in {
             animation: fadeIn 0.5s ease-in;
         }
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
     <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <div class="sidebar bg-indigo-800 text-white w-64 flex flex-col sidebar">
+        <aside id="sidebar" class="sidebar bg-indigo-800 text-white w-64 flex flex-col">
             <div class="p-4 flex items-center border-b border-indigo-700">
+                <button id="sidebar-toggle" class="lg:hidden text-white mr-3 focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center">
                     <i class="fas fa-car text-indigo-800 text-xl"></i>
                 </div>
                 <span class="logo-text ml-3 text-xl font-bold">Lbrothes</span>
             </div>
             
-            
-           
-            
-            <nav class="flex-1 overflow-y-auto">
+            <nav class="flex-1 overflow-y-auto py-2">
                 <div class="p-2">
-                    <div class="menu-item flex items-center p-3 rounded-lg hover:bg-indigo-700 cursor-pointer">
+                    <a href="#" class="menu-item flex items-center p-3 rounded-lg hover:bg-indigo-700 cursor-pointer" data-menu="dashboard">
                         <i class="fas fa-tachometer-alt"></i>
                         <span class="sidebar-text ml-3">Dashboard</span>
-                    </div>
+                    </a>
                     
-                    <div class="menu-item flex items-center p-3 rounded-lg bg-indigo-700 cursor-pointer">
+                    <a href="#" class="menu-item flex items-center p-3 rounded-lg bg-indigo-700 cursor-pointer" data-menu="agendamentos">
                         <i class="fas fa-calendar-alt"></i>
                         <span class="sidebar-text ml-3">Agendamentos</span>
-                    </div>
+                    </a>
                     
-                    <div class="menu-item flex items-center p-3 rounded-lg hover:bg-indigo-700 cursor-pointer">
+                    <a href="#" class="menu-item flex items-center p-3 rounded-lg hover:bg-indigo-700 cursor-pointer" data-menu="clientes">
                         <i class="fas fa-users"></i>
                         <span class="sidebar-text ml-3">Clientes</span>
-                    </div>
+                    </a>
                     
-                    <div class="menu-item flex items-center p-3 rounded-lg hover:bg-indigo-700 cursor-pointer">
+                    <a href="#" class="menu-item flex items-center p-3 rounded-lg hover:bg-indigo-700 cursor-pointer" data-menu="servicos">
                         <i class="fas fa-concierge-bell"></i>
                         <span class="sidebar-text ml-3">Serviços</span>
-                    </div>
+                    </a>
                     
-                    <div class="menu-item flex items-center p-3 rounded-lg hover:bg-indigo-700 cursor-pointer">
+                    <a href="#" class="menu-item flex items-center p-3 rounded-lg hover:bg-indigo-700 cursor-pointer" data-menu="funcionarios">
                         <i class="fas fa-user-tie"></i>
                         <span class="sidebar-text ml-3">Funcionários</span>
-                    </div>
+                    </a>
                     
-                    <div class="menu-item flex items-center p-3 rounded-lg hover:bg-indigo-700 cursor-pointer">
+                    <a href="#" class="menu-item flex items-center p-3 rounded-lg hover:bg-indigo-700 cursor-pointer" data-menu="relatorios">
                         <i class="fas fa-chart-line"></i>
                         <span class="sidebar-text ml-3">Relatórios</span>
-                    </div>
+                    </a>
                     
-                    <div class="menu-item flex items-center p-3 rounded-lg hover:bg-indigo-700 cursor-pointer">
+                    <a href="#" class="menu-item flex items-center p-3 rounded-lg hover:bg-indigo-700 cursor-pointer" data-menu="configuracoes">
                         <i class="fas fa-cog"></i>
                         <span class="sidebar-text ml-3">Configurações</span>
-                    </div>
+                    </a>
                 </div>
             </nav>
             
             <div class="p-4 border-t border-indigo-700">
-                <div class="menu-item flex items-center p-3 rounded-lg hover:bg-indigo-700 cursor-pointer">
+                <a href="#" class="menu-item flex items-center p-3 rounded-lg hover:bg-indigo-700 cursor-pointer" data-menu="sair">
                     <i class="fas fa-sign-out-alt"></i>
                     <span class="sidebar-text ml-3">Sair</span>
-                </div>
+                </a>
             </div>
-        </div>
+        </aside>
         
-        <!-- Main Content -->
-        <div class="content flex-1 overflow-y-auto">
+        <div id="main-content" class="content flex-1 overflow-y-auto">
             <header class="bg-white shadow-sm p-4 flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-gray-800">Agendamentos</h1>
+                <div class="flex items-center">
+                    <button id="header-sidebar-toggle" class="hidden lg:block text-gray-600 mr-4 focus:outline-none">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="text-2xl font-bold text-gray-800">Agendamentos</h1>
+                </div>
                 <div class="flex items-center space-x-4">
                     <div class="relative">
                         <input type="text" placeholder="Buscar..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -130,18 +171,20 @@
                             <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
                         </button>
                     </div>
+                    <div class="flex items-center">
+                        <img class="h-10 w-10 rounded-full user-avatar cursor-pointer" src="https://randomuser.me/api/portraits/men/7.jpg" alt="User Avatar">
+                    </div>
                 </div>
             </header>
             
             <main class="p-6">
-                <!-- Quick Stats -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 fade-in">
+                <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 fade-in">
                     <div class="bg-white rounded-xl shadow p-6 flex items-center">
                         <div class="p-3 rounded-full bg-indigo-100 text-indigo-600 mr-4">
                             <i class="fas fa-calendar-check text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-gray-500">Agendamentos Hoje</p>
+                            <p class="text-gray-500 text-sm">Agendamentos Hoje</p>
                             <h3 class="text-2xl font-bold">12</h3>
                         </div>
                     </div>
@@ -151,7 +194,7 @@
                             <i class="fas fa-check-circle text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-gray-500">Concluídos</p>
+                            <p class="text-gray-500 text-sm">Concluídos</p>
                             <h3 class="text-2xl font-bold">8</h3>
                         </div>
                     </div>
@@ -161,7 +204,7 @@
                             <i class="fas fa-clock text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-gray-500">Pendentes</p>
+                            <p class="text-gray-500 text-sm">Pendentes</p>
                             <h3 class="text-2xl font-bold">4</h3>
                         </div>
                     </div>
@@ -171,30 +214,28 @@
                             <i class="fas fa-times-circle text-xl"></i>
                         </div>
                         <div>
-                            <p class="text-gray-500">Cancelados</p>
+                            <p class="text-gray-500 text-sm">Cancelados</p>
                             <h3 class="text-2xl font-bold">2</h3>
                         </div>
                     </div>
-                </div>
+                </section>
                 
-                <!-- Calendar and Schedule -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 fade-in">
-                    <!-- Calendar -->
+                <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 fade-in">
                     <div class="bg-white rounded-xl shadow p-6 lg:col-span-1">
                         <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-lg font-semibold">Calendário</h2>
+                            <h2 class="text-lg font-semibold text-gray-800">Calendário</h2>
                             <div class="flex space-x-2">
-                                <button class="p-1 rounded hover:bg-gray-100">
+                                <button aria-label="Previous Month" class="p-1 rounded hover:bg-gray-100 text-gray-600">
                                     <i class="fas fa-chevron-left"></i>
                                 </button>
-                                <button class="p-1 rounded hover:bg-gray-100">
+                                <button aria-label="Next Month" class="p-1 rounded hover:bg-gray-100 text-gray-600">
                                     <i class="fas fa-chevron-right"></i>
                                 </button>
                             </div>
                         </div>
                         
                         <div class="text-center mb-4">
-                            <span class="font-medium">Julho 2023</span>
+                            <span class="font-medium text-lg text-gray-700">Julho 2023</span>
                         </div>
                         
                         <div class="grid grid-cols-7 gap-1 text-center text-sm mb-2">
@@ -214,42 +255,42 @@
                             <div class="calendar-day p-2 rounded-full text-gray-400">28</div>
                             <div class="calendar-day p-2 rounded-full text-gray-400">29</div>
                             <div class="calendar-day p-2 rounded-full text-gray-400">30</div>
-                            <div class="calendar-day p-2 rounded-full">1</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">1</div>
                             
-                            <div class="calendar-day p-2 rounded-full">2</div>
-                            <div class="calendar-day p-2 rounded-full">3</div>
-                            <div class="calendar-day p-2 rounded-full">4</div>
-                            <div class="calendar-day p-2 rounded-full">5</div>
-                            <div class="calendar-day p-2 rounded-full">6</div>
-                            <div class="calendar-day p-2 rounded-full">7</div>
-                            <div class="calendar-day p-2 rounded-full">8</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">2</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">3</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">4</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">5</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">6</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">7</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">8</div>
                             
-                            <div class="calendar-day p-2 rounded-full">9</div>
-                            <div class="calendar-day p-2 rounded-full">10</div>
-                            <div class="calendar-day p-2 rounded-full">11</div>
-                            <div class="calendar-day p-2 rounded-full">12</div>
-                            <div class="calendar-day p-2 rounded-full">13</div>
-                            <div class="calendar-day p-2 rounded-full">14</div>
-                            <div class="calendar-day p-2 rounded-full">15</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">9</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">10</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">11</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">12</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">13</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">14</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">15</div>
                             
-                            <div class="calendar-day p-2 rounded-full">16</div>
-                            <div class="calendar-day p-2 rounded-full">17</div>
-                            <div class="calendar-day p-2 rounded-full">18</div>
-                            <div class="calendar-day p-2 rounded-full">19</div>
-                            <div class="calendar-day p-2 rounded-full">20</div>
-                            <div class="calendar-day p-2 rounded-full">21</div>
-                            <div class="calendar-day p-2 rounded-full">22</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">16</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">17</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">18</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">19</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">20</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">21</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">22</div>
                             
-                            <div class="calendar-day p-2 rounded-full">23</div>
-                            <div class="calendar-day p-2 rounded-full bg-indigo-100 text-indigo-700 font-bold">24</div>
-                            <div class="calendar-day p-2 rounded-full">25</div>
-                            <div class="calendar-day p-2 rounded-full">26</div>
-                            <div class="calendar-day p-2 rounded-full">27</div>
-                            <div class="calendar-day p-2 rounded-full">28</div>
-                            <div class="calendar-day p-2 rounded-full">29</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">23</div>
+                            <div class="calendar-day p-2 rounded-full bg-indigo-100 text-indigo-700 font-bold shadow-md cursor-pointer">24</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">25</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">26</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">27</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">28</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">29</div>
                             
-                            <div class="calendar-day p-2 rounded-full">30</div>
-                            <div class="calendar-day p-2 rounded-full">31</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">30</div>
+                            <div class="calendar-day p-2 rounded-full text-gray-700 hover:bg-gray-200 cursor-pointer">31</div>
                             <div class="calendar-day p-2 rounded-full text-gray-400">1</div>
                             <div class="calendar-day p-2 rounded-full text-gray-400">2</div>
                             <div class="calendar-day p-2 rounded-full text-gray-400">3</div>
@@ -258,11 +299,10 @@
                         </div>
                     </div>
                     
-                    <!-- Today's Schedule -->
                     <div class="bg-white rounded-xl shadow p-6 lg:col-span-2">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-lg font-semibold">Agendamentos de Hoje</h2>
-                            <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 flex items-center">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-2 sm:mb-0">Agendamentos de Hoje</h2>
+                            <button id="new-appointment-btn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
                                 <i class="fas fa-plus mr-2"></i>
                                 <span>Novo Agendamento</span>
                             </button>
@@ -272,12 +312,12 @@
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hora</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Serviço</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Veículo</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hora</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Serviço</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Veículo</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
@@ -288,7 +328,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full user-avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="">
+                                                    <img class="h-10 w-10 rounded-full user-avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Carlos Silva Avatar">
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">Carlos Silva</div>
@@ -310,9 +350,9 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-eye"></i></button>
-                                            <button class="text-yellow-600 hover:text-yellow-900 mr-3"><i class="fas fa-edit"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                            <button aria-label="View Details" class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-eye"></i></button>
+                                            <button aria-label="Edit Appointment" class="text-yellow-600 hover:text-yellow-900 mr-3"><i class="fas fa-edit"></i></button>
+                                            <button aria-label="Delete Appointment" class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
                                         </td>
                                     </tr>
                                     
@@ -323,7 +363,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full user-avatar" src="https://randomuser.me/api/portraits/women/44.jpg" alt="">
+                                                    <img class="h-10 w-10 rounded-full user-avatar" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Ana Oliveira Avatar">
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">Ana Oliveira</div>
@@ -345,9 +385,9 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-eye"></i></button>
-                                            <button class="text-yellow-600 hover:text-yellow-900 mr-3"><i class="fas fa-edit"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                            <button aria-label="View Details" class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-eye"></i></button>
+                                            <button aria-label="Edit Appointment" class="text-yellow-600 hover:text-yellow-900 mr-3"><i class="fas fa-edit"></i></button>
+                                            <button aria-label="Delete Appointment" class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
                                         </td>
                                     </tr>
                                     
@@ -358,7 +398,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full user-avatar" src="https://randomuser.me/api/portraits/men/75.jpg" alt="">
+                                                    <img class="h-10 w-10 rounded-full user-avatar" src="https://randomuser.me/api/portraits/men/75.jpg" alt="Roberto Santos Avatar">
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">Roberto Santos</div>
@@ -380,9 +420,9 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-eye"></i></button>
-                                            <button class="text-yellow-600 hover:text-yellow-900 mr-3"><i class="fas fa-edit"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                            <button aria-label="View Details" class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-eye"></i></button>
+                                            <button aria-label="Edit Appointment" class="text-yellow-600 hover:text-yellow-900 mr-3"><i class="fas fa-edit"></i></button>
+                                            <button aria-label="Delete Appointment" class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
                                         </td>
                                     </tr>
                                     
@@ -393,7 +433,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full user-avatar" src="https://randomuser.me/api/portraits/women/68.jpg" alt="">
+                                                    <img class="h-10 w-10 rounded-full user-avatar" src="https://randomuser.me/api/portraits/women/68.jpg" alt="Juliana Costa Avatar">
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">Juliana Costa</div>
@@ -415,37 +455,35 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-eye"></i></button>
-                                            <button class="text-yellow-600 hover:text-yellow-900 mr-3"><i class="fas fa-edit"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                            <button aria-label="View Details" class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-eye"></i></button>
+                                            <button aria-label="Edit Appointment" class="text-yellow-600 hover:text-yellow-900 mr-3"><i class="fas fa-edit"></i></button>
+                                            <button aria-label="Delete Appointment" class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                </div>
+                </section>
                 
-                <!-- Services and Clients -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 fade-in">
-                    <!-- Popular Services -->
+                <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 fade-in">
                     <div class="bg-white rounded-xl shadow p-6">
                         <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-lg font-semibold">Serviços Populares</h2>
-                            <button class="text-indigo-600 hover:text-indigo-800 flex items-center">
+                            <h2 class="text-lg font-semibold text-gray-800">Serviços Populares</h2>
+                            <a href="#" class="text-indigo-600 hover:text-indigo-800 flex items-center text-sm">
                                 <span>Ver todos</span>
                                 <i class="fas fa-chevron-right ml-1"></i>
-                            </button>
+                            </a>
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="service-card bg-gray-50 p-4 rounded-lg border border-gray-200 transition-all">
+                            <div class="service-card bg-gray-50 p-4 rounded-lg border border-gray-200 transition-all cursor-pointer">
                                 <div class="flex items-start">
                                     <div class="p-3 rounded-full bg-indigo-100 text-indigo-600 mr-4">
-                                        <i class="fas fa-spa"></i>
+                                        <i class="fas fa-spa text-lg"></i>
                                     </div>
                                     <div>
-                                        <h3 class="font-medium">Polimento Completo</h3>
+                                        <h3 class="font-medium text-gray-900">Polimento Completo</h3>
                                         <p class="text-sm text-gray-500">Restauração do brilho da pintura</p>
                                         <div class="mt-2 flex justify-between items-center">
                                             <span class="text-indigo-600 font-bold">R$ 350,00</span>
@@ -455,13 +493,13 @@
                                 </div>
                             </div>
                             
-                            <div class="service-card bg-gray-50 p-4 rounded-lg border border-gray-200 transition-all">
+                            <div class="service-card bg-gray-50 p-4 rounded-lg border border-gray-200 transition-all cursor-pointer">
                                 <div class="flex items-start">
                                     <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
-                                        <i class="fas fa-car"></i>
+                                        <i class="fas fa-car text-lg"></i>
                                     </div>
                                     <div>
-                                        <h3 class="font-medium">Lavagem Premium</h3>
+                                        <h3 class="font-medium text-gray-900">Lavagem Premium</h3>
                                         <p class="text-sm text-gray-500">Lavagem completa com cera</p>
                                         <div class="mt-2 flex justify-between items-center">
                                             <span class="text-indigo-600 font-bold">R$ 120,00</span>
@@ -471,13 +509,13 @@
                                 </div>
                             </div>
                             
-                            <div class="service-card bg-gray-50 p-4 rounded-lg border border-gray-200 transition-all">
+                            <div class="service-card bg-gray-50 p-4 rounded-lg border border-gray-200 transition-all cursor-pointer">
                                 <div class="flex items-start">
                                     <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4">
-                                        <i class="fas fa-shield-alt"></i>
+                                        <i class="fas fa-shield-alt text-lg"></i>
                                     </div>
                                     <div>
-                                        <h3 class="font-medium">Cristalização</h3>
+                                        <h3 class="font-medium text-gray-900">Cristalização</h3>
                                         <p class="text-sm text-gray-500">Proteção avançada da pintura</p>
                                         <div class="mt-2 flex justify-between items-center">
                                             <span class="text-indigo-600 font-bold">R$ 600,00</span>
@@ -487,159 +525,185 @@
                                 </div>
                             </div>
                             
-                            <div class="service-card bg-gray-50 p-4 rounded-lg border border-gray-200 transition-all">
+                            <div class="service-card bg-gray-50 p-4 rounded-lg border border-gray-200 transition-all cursor-pointer">
                                 <div class="flex items-start">
                                     <div class="p-3 rounded-full bg-red-100 text-red-600 mr-4">
-                                        <i class="fas fa-broom"></i>
+                                        <i class="fas fa-broom text-lg"></i>
                                     </div>
                                     <div>
-                                        <h3 class="font-medium">Higienização Interna</h3>
+                                        <h3 class="font-medium text-gray-900">Higienização Interna</h3>
                                         <p class="text-sm text-gray-500">Limpeza profunda do interior</p>
                                         <div class="mt-2 flex justify-between items-center">
                                             <span class="text-indigo-600 font-bold">R$ 250,00</span>
-                                            <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">3 agend.</span>
+                                            <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">4 agend.</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Recent Clients -->
+
                     <div class="bg-white rounded-xl shadow p-6">
                         <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-lg font-semibold">Clientes Recentes</h2>
-                            <button class="text-indigo-600 hover:text-indigo-800 flex items-center">
+                            <h2 class="text-lg font-semibold text-gray-800">Clientes Recentes</h2>
+                            <a href="#" class="text-indigo-600 hover:text-indigo-800 flex items-center text-sm">
                                 <span>Ver todos</span>
                                 <i class="fas fa-chevron-right ml-1"></i>
-                            </button>
+                            </a>
                         </div>
                         
-                        <div class="space-y-4">
-                            <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
-                                <img class="w-12 h-12 rounded-full user-avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="">
-                                <div class="ml-4 flex-1">
-                                    <h3 class="font-medium">Carlos Silva</h3>
-                                    <p class="text-sm text-gray-500">(11) 98765-4321</p>
+                        <ul class="divide-y divide-gray-200">
+                            <li class="py-3 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <img class="h-10 w-10 rounded-full user-avatar mr-3" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Carlos Silva Avatar">
+                                    <div>
+                                        <p class="font-medium text-gray-900">Carlos Silva</p>
+                                        <p class="text-sm text-gray-500">Último agendamento: Polimento</p>
+                                    </div>
                                 </div>
-                                <div class="text-right">
-                                    <p class="text-sm font-medium">2 agendamentos</p>
-                                    <p class="text-xs text-gray-500">Último: 20/07</p>
+                                <span class="text-sm text-gray-600">24/07/2023</span>
+                            </li>
+                            <li class="py-3 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <img class="h-10 w-10 rounded-full user-avatar mr-3" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Ana Oliveira Avatar">
+                                    <div>
+                                        <p class="font-medium text-gray-900">Ana Oliveira</p>
+                                        <p class="text-sm text-gray-500">Último agendamento: Lavagem</p>
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
-                                <img class="w-12 h-12 rounded-full user-avatar" src="https://randomuser.me/api/portraits/women/44.jpg" alt="">
-                                <div class="ml-4 flex-1">
-                                    <h3 class="font-medium">Ana Oliveira</h3>
-                                    <p class="text-sm text-gray-500">(11) 99876-5432</p>
+                                <span class="text-sm text-gray-600">23/07/2023</span>
+                            </li>
+                            <li class="py-3 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <img class="h-10 w-10 rounded-full user-avatar mr-3" src="https://randomuser.me/api/portraits/men/75.jpg" alt="Roberto Santos Avatar">
+                                    <div>
+                                        <p class="font-medium text-gray-900">Roberto Santos</p>
+                                        <p class="text-sm text-gray-500">Último agendamento: Cristalização</p>
+                                    </div>
                                 </div>
-                                <div class="text-right">
-                                    <p class="text-sm font-medium">3 agendamentos</p>
-                                    <p class="text-xs text-gray-500">Último: Hoje</p>
+                                <span class="text-sm text-gray-600">22/07/2023</span>
+                            </li>
+                            <li class="py-3 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <img class="h-10 w-10 rounded-full user-avatar mr-3" src="https://randomuser.me/api/portraits/women/68.jpg" alt="Juliana Costa Avatar">
+                                    <div>
+                                        <p class="font-medium text-gray-900">Juliana Costa</p>
+                                        <p class="text-sm text-gray-500">Último agendamento: Higienização</p>
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
-                                <img class="w-12 h-12 rounded-full user-avatar" src="https://randomuser.me/api/portraits/men/75.jpg" alt="">
-                                <div class="ml-4 flex-1">
-                                    <h3 class="font-medium">Roberto Santos</h3>
-                                    <p class="text-sm text-gray-500">(11) 98765-1234</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-sm font-medium">1 agendamento</p>
-                                    <p class="text-xs text-gray-500">Último: Hoje</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
-                                <img class="w-12 h-12 rounded-full user-avatar" src="https://randomuser.me/api/portraits/women/68.jpg" alt="">
-                                <div class="ml-4 flex-1">
-                                    <h3 class="font-medium">Juliana Costa</h3>
-                                    <p class="text-sm text-gray-500">(11) 98765-9876</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-sm font-medium">Novo cliente</p>
-                                    <p class="text-xs text-gray-500">Agendado para hoje</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
-                                <img class="w-12 h-12 rounded-full user-avatar" src="https://randomuser.me/api/portraits/men/42.jpg" alt="">
-                                <div class="ml-4 flex-1">
-                                    <h3 class="font-medium">Marcos Ribeiro</h3>
-                                    <p class="text-sm text-gray-500">(11) 98765-5555</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-sm font-medium">5 agendamentos</p>
-                                    <p class="text-xs text-gray-500">Último: 18/07</p>
-                                </div>
-                            </div>
-                        </div>
+                                <span class="text-sm text-gray-600">21/07/2023</span>
+                            </li>
+                        </ul>
                     </div>
-                </div>
+                </section>
             </main>
         </div>
     </div>
 
-    <script>
-        // Toggle sidebar
-        document.getElementById('toggleSidebar').addEventListener('click', function() {
-            const sidebar = document.querySelector('.sidebar');
-            const content = document.querySelector('.content');
-            
-            sidebar.classList.toggle('collapsed');
-            content.classList.toggle('expanded');
-        });
+    <div id="new-appointment-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="close-modal-btn">&times;</span>
+            <h2 class="text-xl font-bold mb-4 text-gray-800">Novo Agendamento</h2>
+            <form class="space-y-4">
+                <div>
+                    <label for="client-name" class="block text-sm font-medium text-gray-700">Nome do Cliente</label>
+                    <input type="text" id="client-name" name="client-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Ex: João Silva">
+                </div>
+                <div>
+                    <label for="service-type" class="block text-sm font-medium text-gray-700">Tipo de Serviço</label>
+                    <select id="service-type" name="service-type" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="">Selecione um serviço</option>
+                        <option value="polimento">Polimento Completo</option>
+                        <option value="lavagem">Lavagem Premium</option>
+                        <option value="cristalizacao">Cristalização</option>
+                        <option value="higienizacao">Higienização Interna</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="appointment-date" class="block text-sm font-medium text-gray-700">Data</label>
+                    <input type="date" id="appointment-date" name="appointment-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="appointment-time" class="block text-sm font-medium text-gray-700">Hora</label>
+                    <input type="time" id="appointment-time" name="appointment-time" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div class="flex justify-end pt-4">
+                    <button type="button" id="cancel-appointment-btn" class="mr-3 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Cancelar</button>
+                    <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Salvar Agendamento</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        // Add fade-in effect to elements when they come into view
-        const fadeElements = document.querySelectorAll('.fade-in');
-        
-        const fadeInObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = 1;
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const headerSidebarToggle = document.getElementById('header-sidebar-toggle');
+            const menuItems = document.querySelectorAll('.menu-item');
+            const newAppointmentBtn = document.getElementById('new-appointment-btn');
+            const newAppointmentModal = document.getElementById('new-appointment-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const cancelAppointmentBtn = document.getElementById('cancel-appointment-btn');
+
+            // --- Sidebar Toggle Functionality ---
+            const toggleSidebar = () => {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+            };
+
+            sidebarToggle.addEventListener('click', toggleSidebar);
+            headerSidebarToggle.addEventListener('click', toggleSidebar);
+
+            // Collapse sidebar by default on smaller screens
+            if (window.innerWidth < 1024) {
+                sidebar.classList.add('collapsed');
+                mainContent.classList.add('expanded');
+            }
+
+            // --- Active Menu Item Functionality ---
+            menuItems.forEach(item => {
+                item.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    menuItems.forEach(i => i.classList.remove('bg-indigo-700'));
+                    item.classList.add('bg-indigo-700');
+                    // In a real app, you'd load content based on data-menu attribute
+                    console.log(`Mapsd to: ${item.dataset.menu}`);
+                });
+            });
+
+            // --- New Appointment Modal Functionality ---
+            newAppointmentBtn.addEventListener('click', () => {
+                newAppointmentModal.classList.remove('hidden');
+                newAppointmentModal.classList.add('flex'); // Show with flex for centering
+            });
+
+            closeModalBtn.addEventListener('click', () => {
+                newAppointmentModal.classList.add('hidden');
+                newAppointmentModal.classList.remove('flex');
+            });
+
+            cancelAppointmentBtn.addEventListener('click', () => {
+                newAppointmentModal.classList.add('hidden');
+                newAppointmentModal.classList.remove('flex');
+            });
+
+            // Close modal when clicking outside of it
+            window.addEventListener('click', (event) => {
+                if (event.target === newAppointmentModal) {
+                    newAppointmentModal.classList.add('hidden');
+                    newAppointmentModal.classList.remove('flex');
                 }
             });
-        }, { threshold: 0.1 });
-        
-        fadeElements.forEach(element => {
-            element.style.opacity = 0;
-            fadeInObserver.observe(element);
-        });
 
-        // Calendar day click event
-        const calendarDays = document.querySelectorAll('.calendar-day:not(.text-gray-400)');
-        calendarDays.forEach(day => {
-            day.addEventListener('click', function() {
-                // Remove active class from all days
-                calendarDays.forEach(d => d.classList.remove('bg-indigo-100', 'text-indigo-700', 'font-bold'));
-                
-                // Add active class to clicked day
-                this.classList.add('bg-indigo-100', 'text-indigo-700', 'font-bold');
-                
-                // Here you would typically load appointments for the selected day
-                console.log('Selected day:', this.textContent);
-            });
-        });
-
-        // Service card click event
-        const serviceCards = document.querySelectorAll('.service-card');
-        serviceCards.forEach(card => {
-            card.addEventListener('click', function() {
-                // Here you would typically navigate to the service details or open a modal
-                const serviceName = this.querySelector('h3').textContent;
-                console.log('Selected service:', serviceName);
-            });
-        });
-
-        // Client click event
-        const clientItems = document.querySelectorAll('.user-avatar').forEach(avatar => {
-            avatar.addEventListener('click', function(e) {
-                e.stopPropagation();
-                // Here you would typically navigate to the client details or open a modal
-                const clientName = this.closest('.flex.items-center').querySelector('h3').textContent;
-                console.log('Selected client:', clientName);
+            // Handle form submission (for demonstration)
+            document.querySelector('#new-appointment-modal form').addEventListener('submit', (event) => {
+                event.preventDefault();
+                alert('Novo agendamento salvo! (Este é apenas um exemplo)');
+                newAppointmentModal.classList.add('hidden');
+                newAppointmentModal.classList.remove('flex');
+                // Here you would typically send data to a backend and update the table
             });
         });
     </script>
